@@ -15,12 +15,13 @@ import lombok.NoArgsConstructor;
 public class UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_details_id")
     private Long userDetailsId;
 
     @Column(nullable = false)
     private String username;
 
-    @Column(nullable = false)
+    @Column(name = "email_address", nullable = false)
     private String emailAddress;
 
     @Column(nullable = false)
