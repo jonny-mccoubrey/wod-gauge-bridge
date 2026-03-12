@@ -15,7 +15,9 @@ import tools.jackson.databind.ObjectMapper;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @WebMvcTest(UserController.class)
@@ -31,7 +33,7 @@ class UserControllerTest {
     UserService userService;
 
     @Test
-    void registerUser_valid_returns200WithResponse() throws Exception {
+    void registerUser_valid_returns201WithResponse() throws Exception {
         final String username = "new-user";
         final String email = "testemail@test.com";
 
@@ -53,7 +55,7 @@ class UserControllerTest {
     }
 
     @Test
-    void registerUser_Invalid_returns400WithErrors() throws Exception {
+    void registerUser_invalid_returns400WithErrors() throws Exception {
         final CreateUserRequest req = new CreateUserRequest("", "invalid", "", "");
 
         mvc.perform(post("/api/users")
@@ -68,7 +70,7 @@ class UserControllerTest {
     }
 
     @Test
-    void registerUser_Invalid_Length_returns400WithErrors() throws Exception {
+    void registerUser_invalid_length_returns400WithErrors() throws Exception {
         final CreateUserRequest req = new CreateUserRequest(
                 "a".repeat(31),
                 "",

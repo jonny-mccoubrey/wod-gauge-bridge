@@ -1,5 +1,6 @@
 package org.wod.gauge.wod_gauge_bridge.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,8 +20,8 @@ public class AffiliateController {
     }
 
     @PostMapping
-    public ResponseEntity<AffiliateResponse> createAffiliate(final @RequestBody CreateAffiliateRequest request) {
+    public ResponseEntity<AffiliateResponse> createAffiliate(final @Valid @RequestBody CreateAffiliateRequest request) {
         final AffiliateResponse createdAffiliate = affiliateService.createAffiliate(request);
-        return ResponseEntity.ok(createdAffiliate);
+        return ResponseEntity.status(201).body(createdAffiliate);
     }
 }
