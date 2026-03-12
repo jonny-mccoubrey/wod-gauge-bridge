@@ -23,6 +23,6 @@ public class UserController {
     public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody CreateUserRequest request)
     {
         final UserResponse createdUser = userService.createUser(request);
-        return ResponseEntity.ok(createdUser);
+        return ResponseEntity.status(201).body(createdUser);
     }
 }

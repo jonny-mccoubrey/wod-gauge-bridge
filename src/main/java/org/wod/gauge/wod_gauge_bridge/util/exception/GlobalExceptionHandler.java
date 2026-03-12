@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
                 .forEach(err -> fieldErrors.put(err.getField(), err.getDefaultMessage()));
 
         final ValidationErrorResponse body = new ValidationErrorResponse(
-                "Validation failed",
+                "Validation Failed",
                 fieldErrors
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
