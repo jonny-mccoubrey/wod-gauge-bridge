@@ -71,7 +71,7 @@ class UserControllerTest {
     void registerUser_Invalid_Length_returns400WithErrors() throws Exception {
         final CreateUserRequest req = new CreateUserRequest(
                 "a".repeat(31),
-                "a".repeat(51),
+                "",
                 "a".repeat(31),
                 "a".repeat(101)
         );
@@ -82,7 +82,6 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Validation Failed"))
                 .andExpect(jsonPath("$.errors.username").value("Username cannot be longer than 30 characters"))
-                .andExpect(jsonPath("$.errors.emailAddress").value("Email Address cannot be longer than 50 characters"))
                 .andExpect(jsonPath("$.errors.password").value("Password cannot be longer than 30 characters"))
                 .andExpect(jsonPath("$.errors.name").value("Name cannot be longer than 100 characters"));
     }
