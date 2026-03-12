@@ -1,13 +1,13 @@
-package org.wod.gauge.wod_gauge_bridge.layers.service;
+package org.wod.gauge.wod_gauge_bridge.service;
 
 import org.springframework.stereotype.Service;
-import org.wod.gauge.wod_gauge_bridge.dto.AffiliateResponse;
-import org.wod.gauge.wod_gauge_bridge.dto.CreateAffiliateRequest;
-import org.wod.gauge.wod_gauge_bridge.exception.UserNotFoundException;
-import org.wod.gauge.wod_gauge_bridge.layers.persistence.entity.Affiliate;
-import org.wod.gauge.wod_gauge_bridge.layers.persistence.entity.UserDetails;
-import org.wod.gauge.wod_gauge_bridge.layers.persistence.repository.AffiliateRepository;
-import org.wod.gauge.wod_gauge_bridge.layers.persistence.repository.UserDetailsRepository;
+import org.wod.gauge.wod_gauge_bridge.controller.dto.AffiliateResponse;
+import org.wod.gauge.wod_gauge_bridge.controller.dto.CreateAffiliateRequest;
+import org.wod.gauge.wod_gauge_bridge.util.exception.UserNotFoundException;
+import org.wod.gauge.wod_gauge_bridge.persistence.entity.Affiliate;
+import org.wod.gauge.wod_gauge_bridge.persistence.entity.UserDetails;
+import org.wod.gauge.wod_gauge_bridge.persistence.repository.AffiliateRepository;
+import org.wod.gauge.wod_gauge_bridge.persistence.repository.UserDetailsRepository;
 
 @Service
 public class AffiliateServiceImpl implements AffiliateService {

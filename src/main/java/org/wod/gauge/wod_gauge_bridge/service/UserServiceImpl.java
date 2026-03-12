@@ -1,10 +1,10 @@
-package org.wod.gauge.wod_gauge_bridge.layers.service;
+package org.wod.gauge.wod_gauge_bridge.service;
 
 import org.springframework.stereotype.Service;
-import org.wod.gauge.wod_gauge_bridge.dto.CreateUserRequest;
-import org.wod.gauge.wod_gauge_bridge.dto.UserResponse;
-import org.wod.gauge.wod_gauge_bridge.layers.persistence.entity.UserDetails;
-import org.wod.gauge.wod_gauge_bridge.layers.persistence.repository.UserDetailsRepository;
+import org.wod.gauge.wod_gauge_bridge.controller.dto.CreateUserRequest;
+import org.wod.gauge.wod_gauge_bridge.controller.dto.UserResponse;
+import org.wod.gauge.wod_gauge_bridge.persistence.entity.UserDetails;
+import org.wod.gauge.wod_gauge_bridge.persistence.repository.UserDetailsRepository;
 
 @Service
 public class UserServiceImpl implements UserService {

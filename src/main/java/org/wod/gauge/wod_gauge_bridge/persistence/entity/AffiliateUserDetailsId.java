@@ -1,4 +1,4 @@
-package org.wod.gauge.wod_gauge_bridge.layers.persistence.entity;
+package org.wod.gauge.wod_gauge_bridge.persistence.entity;
 
 import jakarta.persistence.Embeddable;
 

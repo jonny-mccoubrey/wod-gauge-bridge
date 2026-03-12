@@ -1,4 +1,4 @@
-package org.wod.gauge.wod_gauge_bridge.dto;
+package org.wod.gauge.wod_gauge_bridge.controller.dto;
 
 import lombok.Data;
 
