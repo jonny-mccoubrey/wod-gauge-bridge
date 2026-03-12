@@ -1,5 +1,6 @@
 package org.wod.gauge.wod_gauge_bridge.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +20,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponse> registerUser(@RequestBody CreateUserRequest request)
+    public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody CreateUserRequest request)
     {
         final UserResponse createdUser = userService.createUser(request);
         return ResponseEntity.ok(createdUser);
