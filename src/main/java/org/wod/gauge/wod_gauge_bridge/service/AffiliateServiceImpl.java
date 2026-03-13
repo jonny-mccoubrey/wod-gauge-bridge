@@ -1,5 +1,6 @@
 package org.wod.gauge.wod_gauge_bridge.service;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.wod.gauge.wod_gauge_bridge.controller.dto.AffiliateResponse;
 import org.wod.gauge.wod_gauge_bridge.controller.dto.CreateAffiliateRequest;
@@ -9,6 +10,7 @@ import org.wod.gauge.wod_gauge_bridge.persistence.entity.AffiliateUser;
 import org.wod.gauge.wod_gauge_bridge.persistence.entity.AffiliateUserDetailsId;
 import org.wod.gauge.wod_gauge_bridge.persistence.repository.AffiliateUserRepository;
 import org.wod.gauge.wod_gauge_bridge.util.exception.AffiliateNotFoundException;
+import org.wod.gauge.wod_gauge_bridge.util.exception.DuplicateAssociationException;
 import org.wod.gauge.wod_gauge_bridge.util.exception.UserNotFoundException;
 import org.wod.gauge.wod_gauge_bridge.persistence.entity.Affiliate;
 import org.wod.gauge.wod_gauge_bridge.persistence.entity.UserDetails;
@@ -64,7 +66,13 @@ public class AffiliateServiceImpl implements AffiliateService {
                 .userDetails(userDetails)
                 .build();
 
-        affiliateUserRepository.save(affiliateUser);
+        try {
+            affiliateUserRepository.save(affiliateUser);
+        } catch (final DataIntegrityViolationException ex) {
+            throw new DuplicateAssociationException(
+                    String.format("User (ID: %s) is already a member of Affiliate (ID: %s)",
+                            userDetails.getUserDetailsId(), affiliate.getAffiliateId()));
+        }
     }
 
     @Override

@@ -47,4 +47,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleAffiliateNotFoundException(final AffiliateNotFoundException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
+
+    @ExceptionHandler(DuplicateAssociationException.class)
+    public ResponseEntity<String> handleDuplicateAssociationException(final DuplicateAssociationException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
 }

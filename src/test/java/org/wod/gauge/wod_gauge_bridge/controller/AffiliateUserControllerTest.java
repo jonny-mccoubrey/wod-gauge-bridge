@@ -12,6 +12,7 @@ import org.wod.gauge.wod_gauge_bridge.persistence.entity.Affiliate;
 import org.wod.gauge.wod_gauge_bridge.persistence.entity.UserDetails;
 import org.wod.gauge.wod_gauge_bridge.service.AffiliateService;
 import org.wod.gauge.wod_gauge_bridge.util.exception.AffiliateNotFoundException;
+import org.wod.gauge.wod_gauge_bridge.util.exception.DuplicateAssociationException;
 import org.wod.gauge.wod_gauge_bridge.util.exception.UserNotFoundException;
 import tools.jackson.databind.ObjectMapper;
 
@@ -74,6 +75,21 @@ class AffiliateUserControllerTest {
                         .content(mapper.writeValueAsString(req)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("UserDetails with ID 1 was not found."));
+    }
+
+    @Test
+    void addUserToAffiliate_invalid_duplicate_returns400() throws Exception {
+        final String message = "Exception message";
+
+        final CreateAffiliateUserRequest req = new CreateAffiliateUserRequest(1L, 1L);
+
+        doThrow(new DuplicateAssociationException(message)).when(affiliateService).addUserToAffiliate(req);
+
+        mvc.perform(post("/api/affiliate-users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(req)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(message));
     }
 
     @Test
