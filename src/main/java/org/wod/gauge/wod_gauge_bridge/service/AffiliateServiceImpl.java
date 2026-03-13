@@ -4,7 +4,9 @@ import org.springframework.stereotype.Service;
 import org.wod.gauge.wod_gauge_bridge.controller.dto.AffiliateResponse;
 import org.wod.gauge.wod_gauge_bridge.controller.dto.CreateAffiliateRequest;
 import org.wod.gauge.wod_gauge_bridge.controller.dto.CreateAffiliateUserRequest;
+import org.wod.gauge.wod_gauge_bridge.controller.dto.UserResponse;
 import org.wod.gauge.wod_gauge_bridge.persistence.entity.AffiliateUser;
+import org.wod.gauge.wod_gauge_bridge.persistence.entity.AffiliateUserDetailsId;
 import org.wod.gauge.wod_gauge_bridge.persistence.repository.AffiliateUserRepository;
 import org.wod.gauge.wod_gauge_bridge.util.exception.AffiliateNotFoundException;
 import org.wod.gauge.wod_gauge_bridge.util.exception.UserNotFoundException;
@@ -12,6 +14,8 @@ import org.wod.gauge.wod_gauge_bridge.persistence.entity.Affiliate;
 import org.wod.gauge.wod_gauge_bridge.persistence.entity.UserDetails;
 import org.wod.gauge.wod_gauge_bridge.persistence.repository.AffiliateRepository;
 import org.wod.gauge.wod_gauge_bridge.persistence.repository.UserDetailsRepository;
+
+import java.util.List;
 
 @Service
 public class AffiliateServiceImpl implements AffiliateService {
@@ -55,10 +59,28 @@ public class AffiliateServiceImpl implements AffiliateService {
                 .orElseThrow(() -> new UserNotFoundException(request.getUserDetailsId(), UserDetails.class));
 
         final AffiliateUser affiliateUser = AffiliateUser.builder()
-                .affiliateId(affiliate.getAffiliateId())
-                .userDetailsId(userDetails.getUserDetailsId())
+                .id(new AffiliateUserDetailsId(null, null))
+                .affiliate(affiliate)
+                .userDetails(userDetails)
                 .build();
 
         affiliateUserRepository.save(affiliateUser);
+    }
+
+    @Override
+    public List<UserResponse> getAffiliateMembers(final Long affiliateId) {
+        final List<UserDetails> users = affiliateUserRepository.findByAffiliateAffiliateId(affiliateId)
+                .stream()
+                .map(AffiliateUser::getUserDetails)
+                .toList();
+
+        return users.stream()
+                .map(userEntity -> UserResponse.builder()
+                        .userDetailsId(userEntity.getUserDetailsId())
+                        .username(userEntity.getUsername())
+                        .emailAddress(userEntity.getEmailAddress())
+                        .name(userEntity.getName())
+                        .build())
+                .toList();
     }
 }

@@ -36,10 +36,11 @@ class UserControllerTest {
     void registerUser_valid_returns201WithResponse() throws Exception {
         final String username = "new-user";
         final String email = "testemail@test.com";
+        final String name = "New User";
 
-        final CreateUserRequest req = new CreateUserRequest(username, email, "password", "New User");
+        final CreateUserRequest req = new CreateUserRequest(username, email, "password", name);
 
-        final UserResponse res = new UserResponse(1L, username, email);
+        final UserResponse res = new UserResponse(1L, username, email, name);
 
         when(userService.createUser(req)).thenReturn(res);
 
