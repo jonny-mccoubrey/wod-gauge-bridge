@@ -33,7 +33,9 @@ public class AffiliateUserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserResponse>> getAffiliateMembers(final @RequestParam @NotNull Long affiliateId) {
+    public ResponseEntity<List<UserResponse>> getAffiliateMembers(final @RequestParam
+                                                                      @NotNull(message = "affiliateId is required")
+                                                                      Long affiliateId) {
         final List<UserResponse> members = affiliateService.getAffiliateMembers(affiliateId);
         return ResponseEntity.status(200).body(members);
     }

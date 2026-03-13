@@ -3,6 +3,7 @@ package org.wod.gauge.wod_gauge_bridge.util.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.wod.gauge.wod_gauge_bridge.util.validation.ValidationErrorResponse;
@@ -25,6 +26,17 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
+
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ValidationErrorResponse> handleMissingRequestParam(MissingServletRequestParameterException ex) {
+        Map<String, String> errors = new HashMap<>();
+        // The parameter name is ex.getParameterName(); type is ex.getParameterType()
+        errors.put(ex.getParameterName(), "Required request parameter is missing");
+        ValidationErrorResponse body = new ValidationErrorResponse("Validation Failed", errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleUserNotFoundException(final UserNotFoundException ex) {

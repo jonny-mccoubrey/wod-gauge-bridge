@@ -18,6 +18,7 @@ import tools.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -97,5 +98,24 @@ class AffiliateUserControllerTest {
                 .andExpect(jsonPath("$[0].username").value(username))
                 .andExpect(jsonPath("$[0].emailAddress").value(email))
                 .andExpect(jsonPath("$[0].name").value(name));
+    }
+
+    @Test
+    void getAffiliateMembers_invalid_missingParam_returns400WithErrors() throws Exception {
+        mvc.perform(get("/api/affiliate-users"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Validation Failed"))
+                .andExpect(jsonPath("$.errors.affiliateId").value("Required request parameter is missing"));
+    }
+
+    @Test
+    void getAffiliateMembers_invalid_returns400() throws Exception {
+        when(affiliateService.getAffiliateMembers(anyLong())).thenThrow(new AffiliateNotFoundException(1L, Affiliate.class));
+
+        mvc.perform(get("/api/affiliate-users")
+                        .param("affiliateId", String.valueOf(1L))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Affiliate with ID 1 was not found."));
     }
 }
