@@ -69,6 +69,8 @@ public class AffiliateServiceImpl implements AffiliateService {
 
     @Override
     public List<UserResponse> getAffiliateMembers(final Long affiliateId) {
+        if(!affiliateRepository.existsById(affiliateId)) throw new AffiliateNotFoundException(affiliateId, Affiliate.class);
+
         final List<UserDetails> users = affiliateUserRepository.findByAffiliateAffiliateId(affiliateId)
                 .stream()
                 .map(AffiliateUser::getUserDetails)

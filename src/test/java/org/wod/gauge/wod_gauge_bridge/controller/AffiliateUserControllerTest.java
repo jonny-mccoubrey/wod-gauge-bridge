@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.wod.gauge.wod_gauge_bridge.controller.dto.CreateAffiliateUserRequest;
+import org.wod.gauge.wod_gauge_bridge.controller.dto.UserResponse;
 import org.wod.gauge.wod_gauge_bridge.persistence.entity.Affiliate;
 import org.wod.gauge.wod_gauge_bridge.persistence.entity.UserDetails;
 import org.wod.gauge.wod_gauge_bridge.service.AffiliateService;
@@ -14,9 +15,15 @@ import org.wod.gauge.wod_gauge_bridge.util.exception.AffiliateNotFoundException;
 import org.wod.gauge.wod_gauge_bridge.util.exception.UserNotFoundException;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AffiliateUserController.class)
@@ -66,5 +73,29 @@ class AffiliateUserControllerTest {
                         .content(mapper.writeValueAsString(req)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("UserDetails with ID 1 was not found."));
+    }
+
+    @Test
+    void getAffiliateMembers_valid_returns200WithResponse() throws Exception {
+        final Long affiliateId = 1L;
+        final String username = "new-user";
+        final String email = "newuser@test.com";
+        final String name = "New User";
+
+        final List<UserResponse> members = new ArrayList<>();
+        members.add(new UserResponse(1L, username, email, name));
+
+        when(affiliateService.getAffiliateMembers(affiliateId)).thenReturn(members);
+
+        mvc.perform(get("/api/affiliate-users")
+                        .param("affiliateId", String.valueOf(affiliateId))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].userDetailsId").value(1))
+                .andExpect(jsonPath("$[0].username").value(username))
+                .andExpect(jsonPath("$[0].emailAddress").value(email))
+                .andExpect(jsonPath("$[0].name").value(name));
     }
 }
