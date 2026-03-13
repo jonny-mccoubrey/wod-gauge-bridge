@@ -30,4 +30,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleUserNotFoundException(final UserNotFoundException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
+
+    @ExceptionHandler(AffiliateNotFoundException.class)
+    public ResponseEntity<String> handleAffiliateNotFoundException(final AffiliateNotFoundException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
 }

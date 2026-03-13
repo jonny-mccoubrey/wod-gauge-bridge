@@ -29,7 +29,7 @@ class AffiliateControllerTest {
     MockMvc mvc;
 
     @Autowired
-    ObjectMapper objectMapper;
+    ObjectMapper mapper;
 
     @MockitoBean
     AffiliateService affiliateService;
@@ -47,7 +47,7 @@ class AffiliateControllerTest {
 
         mvc.perform(post("/api/affiliates")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(req)))
+                .content(mapper.writeValueAsString(req)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.affiliateId").value(1L))
                 .andExpect(jsonPath("$.name").value(name));
@@ -59,7 +59,7 @@ class AffiliateControllerTest {
 
         mvc.perform(post("/api/affiliates")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(req)))
+                .content(mapper.writeValueAsString(req)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Validation Failed"))
                 .andExpect(jsonPath("$.errors.ownerId").value("Owner ID is required"))
@@ -77,14 +77,13 @@ class AffiliateControllerTest {
 
         mvc.perform(post("/api/affiliates")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(req)))
+                .content(mapper.writeValueAsString(req)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Validation Failed"))
                 .andExpect(jsonPath("$.errors.name").value("Name cannot be longer than 100 characters"))
                 .andExpect(jsonPath("$.errors.country").value("Country cannot be longer than 50 characters"));
     }
 
-    // Mock service to return exception for invalid Owner ID
     @Test
     void createAffiliate_invalid_ownerId_returns400() throws Exception {
         final CreateAffiliateRequest req = new CreateAffiliateRequest(1L, "Test Name", "United Kingdom");
@@ -92,8 +91,8 @@ class AffiliateControllerTest {
         when(affiliateService.createAffiliate(req)).thenThrow(new UserNotFoundException(req.getOwnerId(), UserDetails.class));
 
         mvc.perform(post("/api/affiliates")
-                        .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(req)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(req)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("UserDetails with ID 1 was not found."));
     }

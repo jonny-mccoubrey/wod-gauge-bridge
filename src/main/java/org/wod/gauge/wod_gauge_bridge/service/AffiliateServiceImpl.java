@@ -3,6 +3,10 @@ package org.wod.gauge.wod_gauge_bridge.service;
 import org.springframework.stereotype.Service;
 import org.wod.gauge.wod_gauge_bridge.controller.dto.AffiliateResponse;
 import org.wod.gauge.wod_gauge_bridge.controller.dto.CreateAffiliateRequest;
+import org.wod.gauge.wod_gauge_bridge.controller.dto.CreateAffiliateUserRequest;
+import org.wod.gauge.wod_gauge_bridge.persistence.entity.AffiliateUser;
+import org.wod.gauge.wod_gauge_bridge.persistence.repository.AffiliateUserRepository;
+import org.wod.gauge.wod_gauge_bridge.util.exception.AffiliateNotFoundException;
 import org.wod.gauge.wod_gauge_bridge.util.exception.UserNotFoundException;
 import org.wod.gauge.wod_gauge_bridge.persistence.entity.Affiliate;
 import org.wod.gauge.wod_gauge_bridge.persistence.entity.UserDetails;
@@ -13,10 +17,14 @@ import org.wod.gauge.wod_gauge_bridge.persistence.repository.UserDetailsReposito
 public class AffiliateServiceImpl implements AffiliateService {
     final UserDetailsRepository userRepository;
     final AffiliateRepository affiliateRepository;
+    final AffiliateUserRepository affiliateUserRepository;
 
-    public AffiliateServiceImpl(final UserDetailsRepository userRepository, final AffiliateRepository affiliateRepository) {
+    public AffiliateServiceImpl(final UserDetailsRepository userRepository,
+                                final AffiliateRepository affiliateRepository,
+                                final AffiliateUserRepository affiliateUserRepository) {
         this.userRepository = userRepository;
         this.affiliateRepository = affiliateRepository;
+        this.affiliateUserRepository = affiliateUserRepository;
     }
 
     @Override
@@ -36,5 +44,21 @@ public class AffiliateServiceImpl implements AffiliateService {
                 .affiliateId(affiliate.getAffiliateId())
                 .name(affiliate.getName())
                 .build();
+    }
+
+    @Override
+    public void addUserToAffiliate(final CreateAffiliateUserRequest request) {
+        final Affiliate affiliate = affiliateRepository.findById(request.getAffiliateId())
+                .orElseThrow(() -> new AffiliateNotFoundException(request.getAffiliateId(), Affiliate.class));
+
+        final UserDetails userDetails = userRepository.findById(request.getUserDetailsId())
+                .orElseThrow(() -> new UserNotFoundException(request.getUserDetailsId(), UserDetails.class));
+
+        final AffiliateUser affiliateUser = AffiliateUser.builder()
+                .affiliateId(affiliate.getAffiliateId())
+                .userDetailsId(userDetails.getUserDetailsId())
+                .build();
+
+        affiliateUserRepository.save(affiliateUser);
     }
 }
