@@ -39,7 +39,7 @@ public class AffiliateServiceImpl implements AffiliateService {
                 .orElseThrow(() -> new UserNotFoundException(request.getOwnerId(), UserDetails.class));
 
         final Affiliate affiliate = Affiliate.builder()
-                .ownerId(affiliateOwner)
+                .owner(affiliateOwner)
                 .name(request.getName())
                 .country(request.getCountry())
                 .build();

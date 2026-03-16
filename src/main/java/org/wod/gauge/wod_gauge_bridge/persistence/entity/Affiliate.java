@@ -16,7 +16,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -33,7 +33,7 @@ public class Affiliate {
             nullable = false,
             foreignKey = @ForeignKey(name = "fk_affiliate_owner")
     )
-    private UserDetails ownerId;
+    private UserDetails owner;
 
     @Column(nullable = false)
     private String name;

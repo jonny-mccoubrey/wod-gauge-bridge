@@ -7,13 +7,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.wod.gauge.wod_gauge_bridge.controller.dto.CreateUserRequest;
-import org.wod.gauge.wod_gauge_bridge.controller.dto.UserResponse;
 import org.wod.gauge.wod_gauge_bridge.persistence.entity.UserDetails;
 import org.wod.gauge.wod_gauge_bridge.persistence.repository.UserDetailsRepository;
 
 import static org.mockito.ArgumentMatchers.any;
-
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -23,7 +20,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
     @Mock
-    UserDetailsRepository userRepository;
+    private UserDetailsRepository userRepository;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -43,7 +40,7 @@ class UserServiceImplTest {
                     return u.toBuilder().userDetailsId(42L).build();
                 });
 
-        final UserResponse res = userService.createUser(req);
+        userService.createUser(req);
 
         final ArgumentCaptor<UserDetails> captor = ArgumentCaptor.forClass(UserDetails.class);
         verify(userRepository, times(1)).save(captor.capture());

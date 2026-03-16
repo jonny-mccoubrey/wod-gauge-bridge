@@ -3,8 +3,12 @@ package org.wod.gauge.wod_gauge_bridge.controller.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
+@AllArgsConstructor
+@Builder
 @Data
 public class CreateAffiliateRequest {
     @NotNull(message = "Owner ID is required")
